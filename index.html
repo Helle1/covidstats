@@ -7,31 +7,119 @@
     <title>COVID-STATS (by Helmuth Lammer)</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+    <meta property="og:url"                content="https://covidstats.helmuth-lammer.at" />
+    <meta property="og:type"               content="website" />
+    <meta property="og:title"              content="COVID-19 Relative Country Data (by Helmuth Lammer)" />
+    <meta property="og:description"        content=" To get better understanding of the relative data of the covid-19 cases this website presents the official date from ecdc.europa.eu set in relation to the population of the provided countries. The Data is updated on a daylie basis around 12.00 am UTC+2." />
+    <meta property="og:image"              content="https://helmuth-lammer.at/wp-content/themes/muthual/img/logo-only.jpg" />
+
+    <style>
+        @media (orientation: landscape){
+            #portrait-help{
+                display: none;
+            }
+        }
+
+        h1, h2{
+            font-size: 18px;
+        }
+
+        .sm-icons a{
+            font-size: 24px;
+            padding: 8px;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
-<div class="jumbotron">
-    <h1 class="display-2">COVID-19 Cases per country compared with relative data</h1>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><i class="fas fa-chart-line"></i> Relative COIVD-19 Statistices</a>
+</nav>
 
 <div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-6">Relative Data</h1>
+            <p>
+                This is a statistik over cases per population: relative data compared by country (worldwide).
+                <br />
+                To get better understanding of the relative data of the covid-19 cases this website presents the official date from ecdc.europa.eu set in relation to the population of the provided countries.
+                The Data is updated on a daylie basis around 12.00 am UTC+2.
+            </p>
+        </div>
+    </div>
+</div>
 
-    <div class="cards-deck">
-
-        <div class="card">
-            <div class="card-header">Comparing Countries with realtive Data</div>
-            <div class="card-body">
-                <form class="form-field">
-                    <select class="custom-select" id="selected-countries" multiple="multiple">
-                    </select>
-                </form>
-
-                <div id="chart" style="width: 100%; height: 500px;"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="form-field text-center">
+                <select class="custom-select" id="selected-countries" multiple="multiple"></select>
+                <br /><br/>
             </div>
+
+            <h2 class="text-center">Overall Cases from 31.12.2020 to now (or at least yesterday)</h2>
+            <div id="bar-chart" style="width: 100%; height: 500px;"></div>
+
+            <h2 class="text-center">Relative Cases accumulated over time</h2>
+            <div id="line-chart" style="width: 100%; height: 500px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info"  id="portrait-help">
+                <p>
+                    <i class="fas fa-mobile-alt "></i>&nbsp;
+                    <i class="fas fa-angle-right "></i>&nbsp;
+                    <i class="fas fa-mobile-alt fa-rotate-90"></i> &nbsp;
+                    If you are watching this on your smartphone, rotate it to landscape-mode for better user experience.
+                </p>
+            </div>
+            <div class="alert alert-info d-none d-sm-block d-md-none" >
+                <p>
+                    <i class="fas fa-laptop"></i>&nbsp;
+                    <i class="fas fa-tablet-alt  fa-rotate-90""></i> &nbsp;
+                    For best user experience a desktop screen or tablet is highly recommended.
+                </p>
+                </div>
 
         </div>
     </div>
 </div>
+
+
+<div class="container"><br /><br /></div>
+
+<footer class="container-fluid bg-dark text-center" style="color: #efefef;padding: 80px;">
+    (C) 2020 <a href="https://helmuth-lammer.at" style="color: #fff;">Helmuth Lammer</a> <br/>
+
+    <p class="text-center sm-icons">
+        <a href="https://www.linkedin.com/in/lammer/"><i class="fab fa-linkedin"></i></a>
+        <a href="https://www.xing.com/profile/Helmuth_Lammer"><i class="fab fa-xing-square"></i></a>
+        <a href="https://stackoverflow.com/users/357234/helle"><i class="fab fa-stack-overflow"></i></a>
+    </p>
+
+    Data Source: https://www.ecdc.europa.eu/ (<span id="source-date"></span>)<br />
+    <br />
+    <br />
+    <b>Contributions</b><br />
+    <br />
+    Google Charts<br />
+    GitHub<br />
+    Bootstrap4<br />
+    jQuery<br />
+    simplexlsx<br />
+    bootstrap-multiselect<br />
+    font awesome<br />
+    sypmtoma
+
+</footer>
 
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -40,6 +128,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
 <script src="js/googleChartMaker.js"></script>
 <script src="js/view.js"></script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-4272990-13"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-4272990-13');
+</script>
+
+<script>
+    var symptoma_mode = 'CORONA';
+    var symptoma_integration = 'banner';
+    var symptoma_banner_title = 'COVID-19';
+    var symptoma_banner_subtitle = 'Start Test';
+    var symptoma_banner_link_text = 'Info';
+    var symptoma_banner_link_url = 'https://www.symptoma.com/covid-19';
+    var script = document.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('src', 'https://www.symptoma.net/en/embed.js');
+    document.currentScript.parentNode.insertBefore(script, document.currentScript.parentNode.nextSibling);
+</script
 
 </body>
 </html>

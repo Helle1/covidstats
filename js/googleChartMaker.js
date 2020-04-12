@@ -18,7 +18,7 @@ class googleChartsMaker{
                 duration: 1200,
                 easing: 'inAndOut'
             },
-            colors: ['#FF3E17', '#B0FF24', '#FF096E', '#24FFAA', '#CA17FF'],
+     //       colors: ['#FF3E17', '#B0FF24', '#FF096E', '#24FFAA', '#CA17FF'],
             dataOpacity: 0.9
         };
 
@@ -29,14 +29,30 @@ class googleChartsMaker{
         this.outputReference = outputReference;
     }
 
-    setData(data){
+    setBarData(data){
 
-        this.data = [];//, 'Durchschnitt']];
+        this.data = [[
+            {label: 'Country', type: 'string'},
+            {label: 'Relative Cases', type: 'number'},
+            {type: 'string', role: 'tooltip','p': {'html': true} },
+            {label: 'Relative Death', type: 'number'},
+            {type: 'string', role: 'tooltip','p': {'html': true} },
+            {label: 'Deathrate', type: 'number'},
+            {type: 'string', role: 'tooltip','p': {'html': true} }
+        ]];//, 'Durchschnitt']];
+
         let average = this.getAverage(data);
         for(let i=0;i<data.length; i++){
 
-            let descriptionText = "absolut cases/death (population): "+data[i].aggregatedCases+"/"+data[i].aggregatedDeaths + "("+data[i].population+")";
-            this.data.push([data[i].countryName, data[i].relativeCases*100, data[i].relativeDeaths*100, data[i].deathRate*100, descriptionText]);
+            this.data.push([
+                data[i].countryName,
+                data[i].relativeCases*100,
+                "<b>"+data[i].countryName+"</b><br> - CASES: "+Math.round(data[i].relativeCases*1000000) /10000 +"% <br /> (Absolut: "+data[i].aggregatedCases+" [Pop. "+data[i].population+")",
+                data[i].relativeDeaths*100,
+                "<b>"+data[i].countryName+"</b><br> - DEATHS: "+Math.round(data[i].relativeDeaths*1000000) / 10000+"% <br /> (Absolut: "+data[i].aggregatedDeaths+" [Pop. "+data[i].population+")",
+                data[i].deathRate*100,
+                "<b>"+data[i].countryName+"</b><br>  - DEATHSRATE: "+Math.round(data[i].deathRate*1000000)/10000+"%"
+            ]);
         }
     }
 
@@ -61,46 +77,113 @@ class googleChartsMaker{
 
     drawBarChart(){
 
-        let data = new google.visualization.DataTable();
-
-        data.addColumn( {label: 'Country', type: 'string'} );
-        data.addColumn( {label: 'Relative Cases', type: 'number'} );
-        data.addColumn( {label: 'Relative Death', type: 'number'} );
-        data.addColumn( {label: 'Deathrate', type: 'number'} );
-        data.addColumn( {type: 'string', role: 'tooltip' } );
-
-        data.addRows(this.data);
+        let data = google.visualization.arrayToDataTable(this.data);
         let options = {
             chart: {
                 title: this.title,
             },
-            chartArea: {width: '100%'},
+            tooltip: {isHtml: true},
             legend: {position: 'top'},
-
             hAxis: {
-                format: '#.000\'%\'',
-            },
-            bars: 'horizontal',
-            series: {
-                0: { axis: 'cases' },
-                1: { axis: 'cases' },
-                2: { axis: 'deathrate'}
-            },
-            axes: {
-                x: {
-                    cases: {side: 'bottom', label: '% cases', }, // Bottom x-axis.
-                    deathrate: {side: 'top', label: '% Deathrate'} // Top x-axis.
+                0: {
+                    format: '#.000\'%\'',
+                    title: "Relative Cases",
+                    textPosition: 'out',
                 }
-            }
+            },
+            orientation: 'vertical',
+            series: {
+                0: {
+                    targetAxisIndex: 0
+                },
+                1: {
+                    targetAxisIndex: 0
+                },
+                2: {
+                    targetAxisIndex: 1
+                }
+            },
+            seriesType: 'bars',
+
         };
 
         options = Object.assign(options, this.chartOptions);
+        $(this.outputReference[0]).css('height', (100 + 80*this.data.length)+"px");
+        var chart = new google.visualization.ComboChart(this.outputReference[0]);
+        chart.draw(data, options);
+    }
 
-        let chart = new google.charts.Bar(this.outputReference[0]);
+    setLineData(data){
+        this.data = [];
 
-        $(this.outputReference[0]).css('height', (100 + 100*this.data.length)+"px");
+        let header = [{label: 'Day', type: 'date'}];
+        let accumulations = [];
+        for(let i=0;i<data.length; i++){
+            header.push({label: data[i].countryName, type: 'number'});
+            accumulations[i] = 0;
+        }
+        this.data.push(header);
 
-        chart.draw(data, google.charts.Bar.convertOptions(options));
+        let series = [];
+        for(let i=0;i<data.length; i++){
 
+            for(let j in data[i].daylieData){
+
+                let dateString = data[i].daylieData[j].day.date.substr(0,10);
+                if(typeof (series[dateString]) == "undefined"){
+                    let currentDate = new Date(data[i].daylieData[j].day.date.substr(0,10));
+                    series[dateString] = [currentDate];
+                }
+
+                let relativeCases = (data[i].daylieData[j].newCases + accumulations[i]) / data[i].population;
+
+                accumulations[i] += data[i].daylieData[j].newCases;
+                series[dateString][i+1] = relativeCases * 100;
+            }
+        }
+
+        for(let x in series){
+            this.data.push(series[x]);
+        }
+
+    }
+
+    lineChart(){
+        let self = this;
+
+        google.charts.load('current', {packages: ['corechart', 'line']});
+        google.charts.setOnLoadCallback(function(){self.drawLineChart(); });
+    }
+
+    drawLineChart(){
+        let data = google.visualization.arrayToDataTable(this.data);
+        let options = {
+            chart: {
+                title: this.title,
+            },
+            animation: {
+                startup: true,
+                duration: 1200,
+                easing: 'inAndOut'
+            },
+          /*  hAxis: {
+                direction: -1
+            },*/
+            legend: {position: 'top'},
+            curveType: 'function',
+        };
+
+        var formatter = new google.visualization.NumberFormat({
+            fractionDigits: 4,
+            suffix: '%'
+        });
+        formatter.format(data, 1);
+        formatter.format(data, 2);
+        formatter.format(data, 3);
+
+        options = Object.assign(options, this.chartOptions);
+        //$(this.outputReference[0]).css('height', (200 + 100*this.data.length)+"px");
+        var chart = new google.visualization.LineChart(this.outputReference[0]);
+        chart.draw(data, options);
     }
 }

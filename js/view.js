@@ -5,8 +5,18 @@ $(document).ready(function(){
 
 class covidView{
     constructor(props) {
+        let self = this;
         this.selectedCountries = ['AT', 'SE', 'DE'];
+        this.data = [];
         this.loadInitialDataSet();
+
+        window.addEventListener("resize", function() {
+
+            self.setupBarChart(self.data);
+            self.setupLineChart(self.data);
+
+        }, false);
+
     }
 
     loadInitialDataSet(){
@@ -21,33 +31,42 @@ class covidView{
             type: "get",
             data: {"method": 'get-agregated-relative-data', 'countries':countryCodes.join(",") },
             success: function(response){
-                self.setupChart(response)
+                self.data = response;
+
+                self.setupBarChart(response);
+                self.setupLineChart(response);
+
+                $('#source-date').text(response[0].daylieData[0].day.date.substr(0,10));
                 self.initSelectBox();
             },
             error: function(errorData){
                 console.log(errorData);
             }
-
-        })
+        });
     }
 
-    setupChart(data){
+    setupBarChart(data){
 
-        let chartMaker = new googleChartsMaker("Relative Comparision COVID-19");
-        chartMaker.setOutputReference($('#chart'));
-        chartMaker.setData(data);
+        let chartMaker = new googleChartsMaker("Relative Comparision COVID-19 Aggregated Cases today");
+        chartMaker.setOutputReference($('#bar-chart'));
+        chartMaker.setBarData(data);
 
         chartMaker.barChart();
+    }
+
+    setupLineChart(data){
+        let chartMaker = new googleChartsMaker("Relative Comparision COVID-19 Accoumulated Cases per Day");
+        chartMaker.setOutputReference($('#line-chart'));
+        chartMaker.setLineData(data);
+
+        chartMaker.lineChart();
     }
 
     initSelectBox() {
         let self = this;
 
         $('#selected-countries').multiselect({
-            templates: {
-                li: '<li><a href="javascript:void(0);"><label class="pl-2"></label></a></li>'
-            },
-            nonSelectedText: 'Select a name...',
+            nonSelectedText: 'Select multiple countries...',
             enableFiltering: true,
             filterBehavior: 'text',
             enableCaseInsensitiveFiltering: true,
@@ -86,6 +105,7 @@ class covidView{
         }
         $('#selected-countries').multiselect('dataprovider', options);
 
+        $('#selected-countries').unbind();
         $('#selected-countries').on('change', function(){
             let countries = $(this).val();
             self.selectedCountries = countries;

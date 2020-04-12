@@ -8,7 +8,7 @@
 
 define ("ECDC_URL", "https://www.ecdc.europa.eu/");
 define ("ECDC_DATA_URL", "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-");
-define ("LOCAL_DATA_FOLDER", "/var/www/projects/covid-stats/data/");
+define ("LOCAL_DATA_FOLDER", dirname(__FILE__)."/../data/");
 
 class curlGateway
 {
@@ -25,7 +25,14 @@ class curlGateway
     public function __construct()
     {
         $dataUrl = ECDC_DATA_URL;
-        $date = date('Y-m-d');//,strtotime("-1 days"));
+
+        if(date("H") < 12){
+            $date = date('Y-m-d',strtotime("-1 days"));
+        } else {
+            $date = date('Y-m-d');
+        }
+
+
         $extension = ".xlsx";
 
         $this->curlUrl = $dataUrl.$date.$extension;
@@ -73,6 +80,7 @@ class curlGateway
                     $this->addDaylieEntry($row);
                 }
             }
+
         } else {
             echo SimpleXLSX::parse_error();
         }
@@ -155,6 +163,10 @@ class curlGateway
     public function getCountryData(string $countryCode){
 
         if( isset($this->countries[$countryCode])){
+
+            $daylieEntries = $this->countries[$countryCode]->daylieData;
+            $this->countries[$countryCode]->daylieData = array_reverse ( $daylieEntries );
+
             return $this->countries[$countryCode];
         } else {
             return false;
