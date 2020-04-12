@@ -36,7 +36,8 @@ class covidView{
                 self.setupBarChart(response);
                 self.setupLineChart(response);
 
-                $('#source-date').text(response[0].daylieData[0].day.date.substr(0,10));
+                let sourceDate = response[0].daylieData[response[0].daylieData.length-1].day.date.substr(0,10);
+                $('.source-date').text(sourceDate);
                 self.initSelectBox();
             },
             error: function(errorData){

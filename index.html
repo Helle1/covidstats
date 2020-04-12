@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#bed232">
+    <link rel="icon" href="/favicon.png">
+
 
     <title>COVID-STATS (by Helmuth Lammer)</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -61,7 +65,7 @@
                 <br /><br/>
             </div>
 
-            <h2 class="text-center">Overall Cases from 31.12.2020 to now (or at least yesterday)</h2>
+            <h2 class="text-center">Overall Cases from 2019-12-31 to <span class="source-date"></span></h2>
             <div id="bar-chart" style="width: 100%; height: 500px;"></div>
 
             <h2 class="text-center">Relative Cases accumulated over time</h2>
@@ -105,7 +109,7 @@
         <a href="https://stackoverflow.com/users/357234/helle"><i class="fab fa-stack-overflow"></i></a>
     </p>
 
-    Data Source: https://www.ecdc.europa.eu/ (<span id="source-date"></span>)<br />
+    Data Source: https://www.ecdc.europa.eu/ (<span class="source-date"></span>)<br />
     <br />
     <br />
     <b>Contributions</b><br />

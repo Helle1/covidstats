@@ -20,6 +20,9 @@ class controller
         $route = $this->getRout($path);
 
         switch($route){
+            case 'cronjob':
+                $this->loadData();
+                break;
             case 'get-agregated-relative-data':
                 $this->getAggregatedRelativeDataOfAllCountries();
                 break;
@@ -30,6 +33,10 @@ class controller
                 $this->getCountries();
                 break;
         }
+    }
+
+    private function loadData(){
+        return true;
     }
 
     private function getRout(string $uri){
