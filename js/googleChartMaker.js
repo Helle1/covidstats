@@ -18,7 +18,7 @@ class googleChartsMaker{
                 duration: 1200,
                 easing: 'inAndOut'
             },
-     //       colors: ['#FF3E17', '#B0FF24', '#FF096E', '#24FFAA', '#CA17FF'],
+            colors: ['#bed232', '#f5a500', '#78826e', '#496442', '#000000', '#0A2039'],
             dataOpacity: 0.9
         };
 
@@ -180,6 +180,8 @@ class googleChartsMaker{
         formatter.format(data, 1);
         formatter.format(data, 2);
         formatter.format(data, 3);
+
+        //todo:view-source:https://developers-dot-devsite-v2-prod.appspot.com/chart/interactive/docs/gallery/controls_d3ec93155bc4de1d1a6e0a7d4993184e817bc4f8d5256d6b0fa4b029f00ccd9a.frame?hl=de
 
         options = Object.assign(options, this.chartOptions);
         //$(this.outputReference[0]).css('height', (200 + 100*this.data.length)+"px");

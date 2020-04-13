@@ -17,7 +17,7 @@
     <meta property="og:type"               content="website" />
     <meta property="og:title"              content="COVID-19 Relative Country Data (by Helmuth Lammer)" />
     <meta property="og:description"        content=" To get better understanding of the relative data of the covid-19 cases this website presents the official date from ecdc.europa.eu set in relation to the population of the provided countries. The Data is updated on a daylie basis around 12.00 am UTC+2." />
-    <meta property="og:image"              content="https://helmuth-lammer.at/wp-content/themes/muthual/img/logo-only.jpg" />
+    <meta property="og:image"              content="https://covidstats.helmuth-lammer.at/covid-preview.png" />
 
     <style>
         @media (orientation: landscape){
@@ -53,6 +53,7 @@
                 To get better understanding of the relative data of the covid-19 cases this website presents the official date from ecdc.europa.eu set in relation to the population of the provided countries.
                 The Data is updated on a daylie basis around 12.00 am UTC+2.
             </p>
+
         </div>
     </div>
 </div>
@@ -67,6 +68,11 @@
 
             <h2 class="text-center">Overall Cases from 2019-12-31 to <span class="source-date"></span></h2>
             <div id="bar-chart" style="width: 100%; height: 500px;"></div>
+
+            <p class="alert alert-info">
+                <i class="fas fa-info-circle"></i> &nbsp;
+                Heigh deathsrates can be a result of a low testrate.
+            </p>
 
             <h2 class="text-center">Relative Cases accumulated over time</h2>
             <div id="line-chart" style="width: 100%; height: 500px;"></div>
@@ -88,7 +94,7 @@
             <div class="alert alert-info d-none d-sm-block d-md-none" >
                 <p>
                     <i class="fas fa-laptop"></i>&nbsp;
-                    <i class="fas fa-tablet-alt  fa-rotate-90""></i> &nbsp;
+                    <i class="fas fa-tablet-alt  fa-rotate-90"></i> &nbsp;
                     For best user experience a desktop screen or tablet is highly recommended.
                 </p>
                 </div>
@@ -155,7 +161,7 @@
     script.setAttribute('type', 'text/javascript');
     script.setAttribute('src', 'https://www.symptoma.net/en/embed.js');
     document.currentScript.parentNode.insertBefore(script, document.currentScript.parentNode.nextSibling);
-</script
+</script>
 
 </body>
 </html>
